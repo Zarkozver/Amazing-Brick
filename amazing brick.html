@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/p5.js"></script>
+   <script src="https://cdn.jsdelivr.net/gh/bmoren/p5.collide2D/p5.collide2d.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Brick</title>
+</head>
+<body>
+    
+    
+    <script>
+        let b;
+        let r = [];
+        i=0;
+        let br = 0;
+        let t;
+        function setup(){
+            createCanvas(400,650);
+            b = new Brick();
+            r[i] = new Barrier();
+        }
+        function draw(){
+            background(244,233,255);
+            b.show();
+            b.move();
+            
+            let n = 0;;
+            b.x;
+            if(b.y > 670){
+                //b.death();
+                noLoop();
+                console.log('Your score is ',br);
+            }
+            if(b.y < 330){
+                n=4;
+            }
+            for(t of r){
+                t.show();
+                t.move();
+                if(b.score(t)){
+                    br= r.length-1;
+                }
+                if(b.hit(t)){
+                    console.log('drmex');
+                    noLoop();
+                    console.log('Your score is ',br);
+                }
+                if(b.hit2(t)){
+                    console.log('drmex');
+                    noLoop();
+                    console.log('Your score is ',br);
+                }
+                if(b.hit4(t)){
+                    console.log('drmex');
+                    noLoop();
+                    console.log('Your score is ',br);
+                }
+                if(b.hit3(t)){
+                    console.log('drmex');
+                    noLoop();
+                    console.log('Your score is ',br);
+                }
+                t.go(n);
+            }
+            
+            if(t.h == -100){
+               r.push(new Barrier()); 
+            }
+                fill(0);
+            textSize(35);
+            text(br,30,40);
+        }
+        function Barrier(){
+            this.w = width;
+            this.h = -400;
+            this.place = random(100,this.w-100);
+            this.place2 = random(100,this.w-100);
+            this.br = random(-60,60);
+            this.br2 = random(-60,60);
+            this.speed =0;
+            this.show = function(){
+                fill(244,0,44);
+                noStroke();
+               // rect(0,this.h,this.place,30);
+               // rect(this.place+120,this.h,this.w,30);
+                this.brick1 = rect(this.place+this.br,this.h+80,30,30);
+                this.brick2 = rect(this.place+this.br2,this.h+220,30,30);
+                this.wall1 = rect(0,this.h+320,this.place2,30);
+                this.wall2 = rect(this.place2+120,this.h+320,this.w,30);
+            }
+             
+            this.go = function(e){
+                this.speed = e;
+            }
+            this.move = function(){
+                this.h +=this.speed;
+            }
+        }
+        function Brick(){
+            this.x = width/2;
+            this.y = height-200;
+            this.vy = 0;
+            this.grav = 0;
+            this.vx = 0;
+            this.move = function(){
+                this.y += this.vy;
+                this.vy += this.grav;
+                this.x += this.vx;
+            }
+            this.show = function(){
+                fill(0);
+                translate(-15,0);
+                rect(this.x,this.y,27,27);
+                this.x = constrain(this.x,18,width-13);
+                this.y = constrain(this.y,320,height+100);
+            }
+            this.jump_left = function(){
+                this.vy = -5;
+                this.grav = 0.5;
+                this.vx = -2;
+            }
+            this.score = function(t){
+                if(b.y<t.h+260 ){
+                    return true;
+                }
+            }
+            this.jump_right = function(){
+                this.vy = -5;
+                this.grav = 0.5;
+                this.vx = 2;
+            }
+            this.death = function(){
+                    this.x = width/2;
+                    this.y = height-200;
+                    this.vy = 0;
+                    this.grav = 0;
+                    this.vx = 0;
+            }
+            this.hit = function(t){
+                return collideRectRect(this.x,this.y,25,25,t.place+t.br,t.h+80,30,30);
+            }
+            this.hit2 = function(t){
+                return collideRectRect(this.x,this.y,25,25,t.place+t.br2,t.h+220,30,30);
+            }
+            this.hit3 = function(t){
+                return collideRectRect(this.x,this.y,25,25,0,t.h+320,t.place2,30);
+            }
+            this.hit4 = function(t){
+                return collideRectRect(this.x,this.y,25,25,t.place2+120,t.h+320,t.w,30);
+            }
+        }
+        function keyPressed(){
+            if(keyCode === LEFT_ARROW){
+                b.jump_left();
+            }else if(keyCode === RIGHT_ARROW){
+                b.jump_right();
+            }
+        }
+    </script>
+</body>
+</html>
